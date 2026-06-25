@@ -15,12 +15,16 @@ export const setApp = (app: Express) => {
         // Get video by id
     })
 
-    app.get('/videos', (req: Request, res: Response) => {
+    app.post('/videos', (req: Request, res: Response) => {
         // Create new video
     })
 
-    app.get('/videos', (req: Request, res: Response) => {
-        // Get all videos
+    app.put('/videos/:id', (req: Request, res: Response) => {
+        // Update video by id
+    })
+
+    app.delete('/videos/:id', (req: Request, res: Response) => {
+        // Delete video by id
     })
 
     return app;
