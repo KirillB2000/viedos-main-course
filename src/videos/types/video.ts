@@ -16,9 +16,11 @@ export type Video = {
     canBeDownloaded: boolean,
 
     minAgeRestriction: number | null,
-    
+
     createdAt: string,
     publicationDate: string,
 
     availableResolutions: Resolutions[]
 }
+
+//
