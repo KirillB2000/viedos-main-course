@@ -37,7 +37,7 @@ export const setApp = (app: Express) => {
             res: Response<Video>
         ) => {
             req.body
-            const newVideo = {
+            const newVideo: Video = {
                 id: db.videos.length ? db.videos[db.videos.length - 1].id + 1 : 1,
                 title: req.body.title,
                 author: req.body.author,
@@ -82,7 +82,7 @@ export const setApp = (app: Express) => {
         res.status(200).send('testing url')
     })
 
-    app.get('/testing/all-data', (req: Request, res: Response) => {
+    app.delete('/testing/all-data', (req: Request, res: Response) => {
         db.videos = [];
         res.sendStatus(HttpStatus.NoContent);
     })
