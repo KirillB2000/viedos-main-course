@@ -3,6 +3,11 @@ import { HttpStatus } from "./core/types/http-statuses";
 import { db, getDateISOByDays } from "./db/in-memory.db";
 import { Video } from "./videos/types/video";
 import { CreateVideoInputModel } from "./videos/dto/createVideo.input";
+import { createErrorMessages } from "./core/utils/error.utils";
+import { APIErrorResult } from "./core/types/validationError";
+import { createVideoInputDtoValidation, updateVideoInputDtoValidation } from "./videos/validation/videoInputDtoValidation";
+import { UpdateVideoInputModel } from "./videos/dto/updateVideo.input";
+import e from "express";
 
 export const setApp = (app: Express) => {
     app.use(express.json()); // middleware для парсинга JSON в теле запроса
@@ -11,7 +16,7 @@ export const setApp = (app: Express) => {
         res.status(200).send("Hello world!");
     });
 
-    app.get('/videos', (req: Request, res: Response) => {
+    app.get('/videos', (req: Request, res: Response<Video[]>) => {
         res.status(HttpStatus.Ok).send(db.videos)
     })
 
@@ -27,16 +32,20 @@ export const setApp = (app: Express) => {
                 return;
             }
 
-            res.status(200).json(videoById)
+            res.status(200).json(videoById) 
     })
 
     app.post(
         '/videos', 
         (
             req: Request<{}, {}, CreateVideoInputModel>, 
-            res: Response<Video>
+            res: Response<APIErrorResult | Video>
         ) => {
-            req.body
+            const errors = createVideoInputDtoValidation(req.body)
+            if (errors.length > 0) {
+                res.status(HttpStatus.BadRequest).send(createErrorMessages(errors))
+                return;
+            }
             const newVideo: Video = {
                 id: db.videos.length ? db.videos[db.videos.length - 1].id + 1 : 1,
                 title: req.body.title,
@@ -55,10 +64,32 @@ export const setApp = (app: Express) => {
 
     app.put('/videos/:id', 
         (
-            req: Request, 
+            req: Request<{id: string}, {}, UpdateVideoInputModel>, 
             res: Response
         ) => {
-        
+
+        const errors = updateVideoInputDtoValidation(req.body)
+
+        if (errors.length > 0) {
+            res.status(HttpStatus.BadRequest).send(createErrorMessages(errors))
+            return;
+        }
+
+        let videoById = db.videos.find(v => v.id === Number(req.params.id))
+
+        if (!videoById) {
+            res.sendStatus(HttpStatus.NotFound)
+            return;
+        }
+
+        videoById.title = req.body.title;
+        videoById.author = req.body.author;
+        videoById.canBeDownloaded = req.body.canBeDownloaded;
+        videoById.minAgeRestriction = req.body.minAgeRestriction;
+        videoById.publicationDate = req.body.publicationDate;
+        videoById.availableResolutions = req.body.availableResolutions;
+
+        res.sendStatus(HttpStatus.NoContent)
     })
 
     app.delete('/videos/:id', 
