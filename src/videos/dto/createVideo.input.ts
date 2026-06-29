@@ -1,8 +1,8 @@
-import { Resolutions } from "../types/video"
+import { Resolutions } from "../types/video";
 
 export type CreateVideoInputModel = {
-    title: string,
-    author: string,
+  title: string;
+  author: string;
 
-    availableResolutions: Resolutions[]
-}
+  availableResolutions: Resolutions[];
+};
