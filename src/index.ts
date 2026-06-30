@@ -10,8 +10,10 @@ export default setApp(app);
 
 const PORT = process.env.PORT || 5000; // PORT?
 
-// Запуск приложения
+// Запуск приложения: выполняем ТОЛЬКО локально
 
-app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Example app listening on port ${PORT}`);
+  });
+}
