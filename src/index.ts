@@ -4,7 +4,7 @@ import { setApp } from "./setup-app";
 // Создание приложения
 
 export const app = express();
-setApp(app);
+export default setApp(app);
 
 // Порт приложения
 
