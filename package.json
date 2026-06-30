@@ -14,13 +14,6 @@
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@11.9.0",
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "version": "^11.5.1",
-      "onFail": "download"
-    }
-  },
   "type": "commonjs",
   "dependencies": {
     "express": "^5.2.1"
